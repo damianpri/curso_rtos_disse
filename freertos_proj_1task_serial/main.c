@@ -42,40 +42,17 @@ void tarea_uno(void *pvParameters) {
 
 		//Prendo Led
 		ROM_GPIOPinWrite(GPIO_PORTF_BASE, LEDS, LED_ROJO);
-		UARTprintf("Tarea_UNO: Prendo LED Rojo.NNNNNNNNNNNNNNNNNNNNNNNNNNNNN Fin_1a\n");
+		UARTprintf("Tarea_UNO: Prendo LED Rojo.\n");
 		//Delay
 		ROM_SysCtlDelay(50000000/3); //1 Seg
 
 		//Apago Led
 		ROM_GPIOPinWrite(GPIO_PORTF_BASE, LEDS, ~LEDS);
-		UARTprintf("Tarea_UNO: Apago LED Rojo NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN Fin_1b.\n");
-
-
+		UARTprintf("Tarea_UNO: Apago LED Rojo.\n");
+		//ROM_SysCtlDelay(50000000/3); //1 Seg
+		//vTaskDelay(1000);
+		//
 		vTaskDelayUntil(&ui32WakeTime, 2000 / portTICK_RATE_MS);
-
-	}
-}
-
-void tarea_dos(void *pvParameters) {
-
-	portTickType ui32WakeTime;
-
-	ui32WakeTime = 0;
-
-	while(1) {
-
-		//Prendo Led
-		ROM_GPIOPinWrite(GPIO_PORTF_BASE, LEDS, LED_VERDE);
-		UARTprintf("Tarea_DOS: Prendo LED Verde.MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM Fin_2a\n");
-		//Delay
-		ROM_SysCtlDelay((50000000/3)); //1 Seg
-
-		//Apago Led
-		ROM_GPIOPinWrite(GPIO_PORTF_BASE, LEDS, ~LEDS);
-		UARTprintf("Tarea_DOS: Apago LED Verde.MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM Fin_2b\n");
-
-
-		vTaskDelayUntil(&ui32WakeTime, 4000 / portTICK_RATE_MS);
 
 	}
 }
@@ -152,10 +129,6 @@ int main(void) {
 
     xTaskCreate(tarea_uno, (signed portCHAR *)"TAREA_UNO", LEDTASKSTACKSIZE, NULL,
                        tskIDLE_PRIORITY + 1, NULL);
-
-    xTaskCreate(tarea_dos, (signed portCHAR *)"TAREA_DOS", LEDTASKSTACKSIZE, NULL,
-                           tskIDLE_PRIORITY + 1, NULL);
-
 
 
 

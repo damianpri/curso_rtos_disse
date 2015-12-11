@@ -13,7 +13,6 @@
 #include "inc/hw_gpio.h"
 #include "inc/hw_memmap.h"
 
-
 #include "utils/uartstdio.h"
 
 #include "FreeRTOS.h"
@@ -42,41 +41,19 @@ void tarea_uno(void *pvParameters) {
 
 		//Prendo Led
 		ROM_GPIOPinWrite(GPIO_PORTF_BASE, LEDS, LED_ROJO);
-		UARTprintf("Tarea_UNO: Prendo LED Rojo.NNNNNNNNNNNNNNNNNNNNNNNNNNNNN Fin_1a\n");
+
 		//Delay
 		ROM_SysCtlDelay(50000000/3); //1 Seg
 
 		//Apago Led
 		ROM_GPIOPinWrite(GPIO_PORTF_BASE, LEDS, ~LEDS);
-		UARTprintf("Tarea_UNO: Apago LED Rojo NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN Fin_1b.\n");
 
+		//ROM_SysCtlDelay(50000000/3); //1 Seg
+		//vTaskDelay(1000);
+		//
+		//vTaskDelayUntil(&ui32WakeTime, 500 / portTICK_RATE_MS); //Periodo 500ms
 
-		vTaskDelayUntil(&ui32WakeTime, 2000 / portTICK_RATE_MS);
-
-	}
-}
-
-void tarea_dos(void *pvParameters) {
-
-	portTickType ui32WakeTime;
-
-	ui32WakeTime = 0;
-
-	while(1) {
-
-		//Prendo Led
-		ROM_GPIOPinWrite(GPIO_PORTF_BASE, LEDS, LED_VERDE);
-		UARTprintf("Tarea_DOS: Prendo LED Verde.MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM Fin_2a\n");
-		//Delay
-		ROM_SysCtlDelay((50000000/3)); //1 Seg
-
-		//Apago Led
-		ROM_GPIOPinWrite(GPIO_PORTF_BASE, LEDS, ~LEDS);
-		UARTprintf("Tarea_DOS: Apago LED Verde.MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM Fin_2b\n");
-
-
-		vTaskDelayUntil(&ui32WakeTime, 4000 / portTICK_RATE_MS);
-
+		vTaskDelayUntil(&ui32WakeTime, 1000 / portTICK_RATE_MS); //Periodo 2000ms 2SEG
 	}
 }
 
@@ -88,34 +65,6 @@ void ConfigClock(void) {
 
 }
 
-void ConfigUART(void) {
-    //
-    // Enable the GPIO Peripheral used by the UART.
-    //
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
-
-    //
-    // Enable UART0
-    //
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
-
-    //
-    // Configure GPIO Pins for UART mode.
-    //
-    ROM_GPIOPinConfigure(GPIO_PA0_U0RX);
-    ROM_GPIOPinConfigure(GPIO_PA1_U0TX);
-    ROM_GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
-
-    //
-    // Use the internal 16MHz oscillator as the UART clock source.
-    //
-    UARTClockSourceSet(UART0_BASE, UART_CLOCK_PIOSC);
-
-    //
-    // Initialize the UART for console I/O.
-    //
-    UARTStdioConfig(0, 115200, 16000000);
-}
 
 
 void ConfigBotonesYLeds(void) {
@@ -148,14 +97,9 @@ int main(void) {
 
 	ConfigBotonesYLeds();
 
-	ConfigUART();
 
     xTaskCreate(tarea_uno, (signed portCHAR *)"TAREA_UNO", LEDTASKSTACKSIZE, NULL,
                        tskIDLE_PRIORITY + 1, NULL);
-
-    xTaskCreate(tarea_dos, (signed portCHAR *)"TAREA_DOS", LEDTASKSTACKSIZE, NULL,
-                           tskIDLE_PRIORITY + 1, NULL);
-
 
 
 
